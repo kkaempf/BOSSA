@@ -736,8 +736,16 @@ Samba::getChipArchitecture(uint32_t cid)
     uint8_t eproc = (cid >> 5) & 0x7;
     uint8_t arch = (cid >> 20) & 0xff;
 
+    // Check for Cortex-M7 processor
+    if (eproc == 0)
+    {
+        if( arch >= 0x10 && arch <= 0x13 )
+            return true;
+        if (_debug)
+            printf("Unsupported ARM Cortex-M7 architecture\n");
+    }
     // Check for ARM7TDMI processor
-    if (eproc == 2)
+    else if (eproc == 2)
     {
         // Check for SAM7 architecture
         if (arch == 0x70)
